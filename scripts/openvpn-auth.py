@@ -8,6 +8,7 @@
 """
 
 
+import hashlib
 import os
 import re
 import sys
@@ -34,8 +35,19 @@ def _auth(name, password):
     account = __query_db('select * from dial_account where name = ?', [name], one=True)
     if account is None:
         sys.exit(1)
-    elif account['password'] == password:
+    
+    if account['password_hash']:
+        # check hashed password
+        hash = hashlib.sha512(password.encode()).hexdigest()
+        if account['password_hash'] == hash:
+            sys.exit(0)
+        else:
+            sys.exit(1)
+
+    elif account['password'] and account['password'] == password:
+        # backward compatibility for plaintext password
         sys.exit(0)
+        
     sys.exit(1)
 
 
