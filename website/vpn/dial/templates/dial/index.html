@@ -36,6 +36,7 @@
             <th>Bytes Sent</th>
             <th>连接时间</th>
             <th>账号创建时间</th>
+            <th>账号过期时间</th>
           </tr>
         </thead>
         <tbody>
@@ -56,6 +57,7 @@
             <td>{{ account.bs }}</td>
             <td>{{ account.ct }}</td>
             <td>{{ account.created_at }}</td>
+            <td>{{ account.expire_at }}</td>
           </tr>
           {% endfor %}
           {% endif %}

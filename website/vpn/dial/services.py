@@ -235,7 +235,9 @@ def get_accounts(id=None, status=False):
 
     if data:
         accounts = [{'id': i.id, 'name': i.name,
-                     'password': i.password, 'created_at': i.created_at.strftime('%Y-%m-%d %H:%M:%S')}
+                     'password': i.password, 'created_at': i.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                     'expire_at': i.expire_at.strftime('%Y-%m-%d %H:%M:%S'),
+                     'password_hash': i.password_hash}
                     for i in data]
         if status:
             vpn = VpnServer()

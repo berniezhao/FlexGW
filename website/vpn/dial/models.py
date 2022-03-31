@@ -22,7 +22,7 @@ class Account(db.Model):
     password = db.Column(db.String(80))
     created_at = db.Column(db.DateTime)
     expire_at = db.Column(db.DateTime)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(130))
 
     def __init__(self, name, password, created_at=datetime.now(), expire_days=30):
         self.name = name

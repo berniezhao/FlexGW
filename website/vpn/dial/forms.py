@@ -11,9 +11,9 @@
 
 
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, TextAreaField, SelectField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, IntegerField
 from wtforms import ValidationError
-from wtforms.validators import DataRequired, Length, Regexp
+from wtforms.validators import DataRequired, Length, Regexp, NumberRange
 
 
 def _ipool(value):
@@ -59,6 +59,11 @@ class AddForm(Form):
                            validators=[DataRequired(message=u'这是一个必选项！'),
                                        Length(max=20, message=u'密码最长为20个字符！'),
                                        Regexp(r'^[\w]+$', message=u"只可包含如下字符：数字、字母、下划线！")])
+
+    expire_days = IntegerField(u'有效天数',
+                        validators=[DataRequired(message=u'这是一个必选项！'),
+                        NumberRange(min=1, max=366, message=u'有效期为%(min)s天 ~ %(max)s天！')])
+
     #: submit button
     save = SubmitField(u'保存')
     delete = SubmitField(u'删除')
