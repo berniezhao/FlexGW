@@ -8,6 +8,7 @@
 """
 
 
+import datetime
 import hashlib
 import os
 import re
@@ -19,7 +20,7 @@ DATABASE = '%s/instance/website.db' % os.path.abspath(os.path.join(os.path.dirna
 
 
 def __query_db(query, args=(), one=False):
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(DATABASE,detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
     cur = conn.cursor()
     cur.row_factory = sqlite3.Row
     cur = cur.execute(query, args)
@@ -32,8 +33,11 @@ def _auth(name, password):
     regex = re.compile(r'^[\w]+$', 0)
     if not regex.match(name) or not regex.match(password):
         sys.exit(1)
-    account = __query_db('select * from dial_account where name = ?', [name], one=True)
+    account = __query_db('select name, password, password_hash, expire_at as "expire_at [timestamp]" from dial_account where name = ?', [name], one=True)
     if account is None:
+        sys.exit(1)
+
+    if account['expire_at'] <= datetime.now():
         sys.exit(1)
     
     if account['password_hash']:

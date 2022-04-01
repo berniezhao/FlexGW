@@ -8,9 +8,10 @@
 
 
 import copy
+import hashlib
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import render_template, flash, current_app
 
@@ -64,14 +65,13 @@ class VpnConfig(object):
             return False
         return True
 
-    def update_account(self, id, name, password):
+    def update_account(self, id, name, password, expire_days):
         account = Account.query.filter_by(id=id).first()
         if account is None:
-            account = Account(name, password)
+            account = Account(name, password, datetime.now(), expire_days)
             db.session.add(account)
         else:
-            account.name = name
-            account.password = password
+            Account.update(account, name, password, expire_days)
         db.session.commit()
         return True
 
@@ -237,6 +237,7 @@ def get_accounts(id=None, status=False):
         accounts = [{'id': i.id, 'name': i.name,
                      'password': i.password, 'created_at': i.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                      'expire_at': i.expire_at.strftime('%Y-%m-%d %H:%M:%S'),
+                     'expire_days': i.get_expire_days(),
                      'password_hash': i.password_hash}
                     for i in data]
         if status:
@@ -259,7 +260,7 @@ def get_accounts(id=None, status=False):
 
 def account_update(form, id=None):
     account = VpnConfig()
-    if account.update_account(id, form.name.data, form.password.data):
+    if account.update_account(id, form.name.data, form.password.data, form.expire_days):
         return True
     return False
 

@@ -37,6 +37,16 @@ class Account(db.Model):
     def get_id(self):
         return unicode(self.id)
 
+    def get_expire_days(self):
+        delta = self.expire_at - datetime.now()
+        return delta.days
+
+    @staticmethod
+    def update(obj, name, password, expire_days):
+        obj.name = name
+        obj.password = password
+        obj.expire_at = datetime.now() + timedelta(days = expire_days)
+        obj.password_hash = hashlib.sha512(password.encode()).hexdigest()
 
 class Settings(db.Model):
     """settings for dial or common settings."""

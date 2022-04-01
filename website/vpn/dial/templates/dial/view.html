@@ -61,6 +61,29 @@
         </div>
 
         <div class="row">
+          <div class="large-3 columns">
+            <label class="right inline" for="name">过期时间</label>
+          </div>
+          <div class="large-5 columns end">
+            {{ account.expire_at }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.expire_days.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {% if form.expire_days.errors %}
+            {{ form.expire_days(class="error", value=form.expire_days.value) }}
+            <small class="error">{{ form.expire_days.errors[0] }}</small>
+            {% else %}
+            {{ form.expire_days(value=account.expire_days) }}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
           <div class="large-3 columns large-offset-3">
             {{ form.save(class="success tiny button") }}
           </div>
