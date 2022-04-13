@@ -71,7 +71,7 @@ class VpnConfig(object):
             account = Account(name, password, datetime.now(), expire_days)
             db.session.add(account)
         else:
-            Account.update(account, name, password, expire_days)
+            Account.update(account, name, password, datetime.now(), expire_days)
         db.session.commit()
         return True
 
@@ -260,7 +260,7 @@ def get_accounts(id=None, status=False):
 
 def account_update(form, id=None):
     account = VpnConfig()
-    if account.update_account(id, form.name.data, form.password.data, form.expire_days):
+    if account.update_account(id, form.name.data, form.password.data, form.expire_days.data):
         return True
     return False
 

@@ -7,7 +7,7 @@
 """
 
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import hashlib
 
 from website import db
@@ -25,11 +25,8 @@ class Account(db.Model):
     password_hash = db.Column(db.String(130))
 
     def __init__(self, name, password, created_at=datetime.now(), expire_days=30):
-        self.name = name
-        self.password = password
         self.created_at = created_at
-        self.expire_at = created_at + timedelta(days = expire_days)
-        self.password_hash = hashlib.sha512(password.encode()).hexdigest()
+        Account.update(self, name, password, created_at, expire_days)
 
     def __repr__(self):
         return '<Dial Account %s:%s:%s>' % (self.name, self.created_at, self.expire_at)
@@ -42,10 +39,10 @@ class Account(db.Model):
         return delta.days
 
     @staticmethod
-    def update(obj, name, password, expire_days):
+    def update(obj, name, password, expire_from, expire_days):
         obj.name = name
         obj.password = password
-        obj.expire_at = datetime.now() + timedelta(days = expire_days)
+        obj.expire_at = datetime.combine(expire_from + timedelta(days = expire_days), time.max)
         obj.password_hash = hashlib.sha512(password.encode()).hexdigest()
 
 class Settings(db.Model):
