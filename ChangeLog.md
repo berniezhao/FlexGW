@@ -1,5 +1,10 @@
 ChangeLog
 =========
+Version 1.2.0
+-------------
+Forked by Bernie Zhao，增加了拨号账户过期日期
+* 增加OpenVPN账户过期日期设定
+* 增加OpenVPN账户密码加密
 
 Version 1.1.1
 -------------
